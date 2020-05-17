@@ -34,7 +34,7 @@ mongoose
   });
 
 app.use("/*", (req, res) => {
-  res.sendFile(__dirname + "/dist/index.html");
+  res.sendFile(__dirname + "/dist/frontend/index.html");
 });
 
 // app.use(serveStatic(__dirname + "/frontend"));
