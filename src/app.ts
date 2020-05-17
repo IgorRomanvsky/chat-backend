@@ -36,6 +36,6 @@ mongoose
   });
 
 setRouts(routes, app);
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log("App is running on port " + PORT);
 });
