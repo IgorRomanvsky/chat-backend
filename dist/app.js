@@ -26,7 +26,7 @@ const message_socket_1 = require("./modules/messages/message.socket");
 const set_routs_1 = require("./utils/methods/set-routs");
 const bodyParser = __importStar(require("body-parser"));
 const socket_io_1 = __importDefault(require("socket.io"));
-const serve_static_1 = __importDefault(require("serve-static"));
+const path_1 = __importDefault(require("path"));
 const index_1 = __importDefault(require("./modules/index"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const express_1 = __importDefault(require("express"));
@@ -35,13 +35,14 @@ const chatService = message_socket_1.ChatSocketService.getInstance();
 const app = express_1.default();
 const server = http_1.default.createServer(app);
 const PORT = process.env.PORT || 8000;
+app.use(bodyParser.json({ limit: "500mb" }));
+app.use("/", express_1.default.static(path_1.default.join(__dirname, "frontend")));
 const io = socket_io_1.default(server);
 io.on("connection", (socket) => {
     socket.on("userid", (userId) => {
         chatService.setUserSocketById(socket, userId);
     });
 });
-app.use(bodyParser.json({ limit: "500mb" }));
 mongoose_1.default
     .connect("mongodb+srv://igor:igor123@cluster0-oac4l.mongodb.net/test?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -50,8 +51,10 @@ mongoose_1.default
     .catch(() => {
     console.log("Connection failed");
 });
-app.use(serve_static_1.default(__dirname + "/frontend"));
 set_routs_1.setRouts(index_1.default, app);
+app.use((req, res, next) => {
+    res.sendFile(path_1.default.join(__dirname, "frontend", "index.html"));
+});
 server.listen(PORT, () => {
     console.log("App is running on port " + PORT);
 });

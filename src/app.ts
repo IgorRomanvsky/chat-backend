@@ -2,6 +2,7 @@ import { ChatSocketService } from "./modules/messages/message.socket";
 import { setRouts } from "./utils/methods/set-routs";
 import * as bodyParser from "body-parser";
 import socketIo from "socket.io";
+import path from "path";
 import serveStatic from "serve-static";
 import routes from "./modules/index";
 import mongoose from "mongoose";
@@ -11,7 +12,8 @@ const chatService = ChatSocketService.getInstance();
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
-
+app.use(bodyParser.json({ limit: "500mb" }));
+app.use("/", express.static(path.join(__dirname, "frontend")));
 const io = socketIo(server);
 
 io.on("connection", (socket: any) => {
@@ -20,7 +22,6 @@ io.on("connection", (socket: any) => {
   });
 });
 
-app.use(bodyParser.json({ limit: "500mb" }));
 mongoose
   .connect(
     "mongodb+srv://igor:igor123@cluster0-oac4l.mongodb.net/test?retryWrites=true&w=majority",
@@ -33,12 +34,11 @@ mongoose
     console.log("Connection failed");
   });
 
-app.use("/*", (req, res) => {
-  res.sendFile(__dirname + "/dist/frontend/index.html");
+setRouts(routes, app);
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "frontend", "index.html"));
 });
 
-// app.use(serveStatic(__dirname + "/frontend"));
-setRouts(routes, app);
 server.listen(PORT, () => {
   console.log("App is running on port " + PORT);
 });
