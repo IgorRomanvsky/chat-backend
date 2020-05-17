@@ -6,7 +6,7 @@ import serveStatic from "serve-static";
 import routes from "./modules/index";
 import mongoose from "mongoose";
 import express from "express";
-import http from "https";
+import http from "http";
 const chatService = ChatSocketService.getInstance();
 const app = express();
 const server = http.createServer(app);

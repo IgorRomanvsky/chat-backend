@@ -8,7 +8,8 @@
     "build": "tsc",
     "watch:build": "tsc --watch",
     "watch:server": "nodemon './dist/index.js' --watch './dist'",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "start:d": "npm-run-all build --parallel watch:build watch:server --print-label"
   },
   "author": "",
   "license": "ISC",
