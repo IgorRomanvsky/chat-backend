@@ -12,7 +12,6 @@ const app = express();
 app.use(serveStatic(__dirname + "/frontend"));
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
-
 const io = socketIo(server);
 
 io.on("connection", (socket: any) => {

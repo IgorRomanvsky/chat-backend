@@ -129,16 +129,16 @@ __webpack_require__.r(__webpack_exports__);
 
 var routes = [
     {
-        path: "",
+        path: ".",
         loadChildren: "./access/access.module#AccessModule",
     },
     {
-        path: "table",
+        path: ".table",
         loadChildren: "./table/table.module#TableModule",
     },
     {
         canActivate: [_shared_services_auth_guard_service__WEBPACK_IMPORTED_MODULE_3__["AuthGuard"]],
-        path: "chat",
+        path: ".chat",
         loadChildren: "./chat/chat.module#ChatModule",
     },
 ];
@@ -521,7 +521,7 @@ var environment = {
     userUrl: baseUrl + "/user",
     conversationsUrl: baseUrl + "/conversations",
     messages: baseUrl + "/messages",
-    wsUrl: "" + webSocketPrefix,
+    wsUrl: "" + baseUrl,
 };
 /*
  * For easier debugging in development mode, you can import the following file
