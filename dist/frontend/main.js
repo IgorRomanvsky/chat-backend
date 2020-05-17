@@ -521,7 +521,7 @@ var environment = {
     userUrl: baseUrl + "/user",
     conversationsUrl: baseUrl + "/conversations",
     messages: baseUrl + "/messages",
-    wsUrl: "wss://",
+    wsUrl: "ws://",
 };
 /*
  * For easier debugging in development mode, you can import the following file
