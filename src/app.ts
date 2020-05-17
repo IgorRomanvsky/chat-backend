@@ -2,7 +2,6 @@ import { ChatSocketService } from "./modules/messages/message.socket";
 import { setRouts } from "./utils/methods/set-routs";
 import * as bodyParser from "body-parser";
 import socketIo from "socket.io";
-import serveStatic from "serve-static";
 import routes from "./modules/index";
 import mongoose from "mongoose";
 import express from "express";
@@ -15,7 +14,6 @@ app.use(express.static(__dirname + "/frontend"));
 app.get("*", (req, res) => {
   res.sendFile(__dirname + "/frontend" + "/index.html");
 });
-
 app.use(bodyParser.json({ limit: "500mb" }));
 mongoose
   .connect(
