@@ -1,19 +1,25 @@
 import { ChatSocketService } from "./modules/messages/message.socket";
 import { setRouts } from "./utils/methods/set-routs";
 import * as bodyParser from "body-parser";
-// import socketIo from "socket.io";
+import socketIo from "socket.io";
+import serveStatic from "serve-static";
 import routes from "./modules/index";
 import mongoose from "mongoose";
 import express from "express";
 import http from "http";
+const chatService = ChatSocketService.getInstance();
 const app = express();
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
-const chatService = ChatSocketService.getInstance();
-app.use(express.static(__dirname + "/frontend"));
-app.get("*", (req, res) => {
-  res.sendFile(__dirname + "/frontend" + "/index.html");
+
+const io = socketIo(server);
+
+io.on("connection", (socket: any) => {
+  socket.on("userid", (userId: string) => {
+    chatService.setUserSocketById(socket, userId);
+  });
 });
+
 app.use(bodyParser.json({ limit: "500mb" }));
 mongoose
   .connect(
@@ -26,16 +32,9 @@ mongoose
   .catch(() => {
     console.log("Connection failed");
   });
+
+app.use(serveStatic(__dirname + "/frontend"));
 setRouts(routes, app);
-
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("App is running on port " + PORT);
-});
-
-console.log(server);
-const io = require("socket.io").listen(server);
-io.on("connection", (socket: any) => {
-  socket.on("userid", (userId: string) => {
-    chatService.setUserSocketById(socket, userId);
-  });
 });

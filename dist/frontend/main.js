@@ -320,9 +320,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ChatSocketService", function() { return ChatSocketService; });
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
-/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
-/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _messages_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./messages.service */ "./src/app/chat/services/messages.service.ts");
+/* harmony import */ var src_environments_environment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/environments/environment */ "./src/environments/environment.ts");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/lib/index.js");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _messages_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./messages.service */ "./src/app/chat/services/messages.service.ts");
+
 
 
 
@@ -332,7 +334,7 @@ var ChatSocketService = /** @class */ (function () {
         this.messageService = messageService;
     }
     ChatSocketService.prototype.establishWebSocketConation = function (userId) {
-        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_2__("");
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_3__(src_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].wsUrl);
         this.socket.emit("userid", userId);
         this.initSocketEvents();
     };
@@ -346,7 +348,7 @@ var ChatSocketService = /** @class */ (function () {
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"])({
             providedIn: "root",
         }),
-        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_messages_service__WEBPACK_IMPORTED_MODULE_3__["MessagesService"]])
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:paramtypes", [_messages_service__WEBPACK_IMPORTED_MODULE_4__["MessagesService"]])
     ], ChatSocketService);
     return ChatSocketService;
 }());
