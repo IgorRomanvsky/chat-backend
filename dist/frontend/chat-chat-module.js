@@ -144,6 +144,7 @@ var InputComponent = /** @class */ (function () {
             receiver: this.conversationPartner._id,
             conversationId: this.conversationId,
         };
+        this.messageText = "";
         this.messageService.onSendNewMessage(message);
     };
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
