@@ -6,9 +6,7 @@ import serveStatic from "serve-static";
 import routes from "./modules/index";
 import mongoose from "mongoose";
 import express from "express";
-import http from "http";
 const app = express();
-const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
 const chatService = ChatSocketService.getInstance();
 app.use(express.static(__dirname + "/frontend"));
@@ -16,7 +14,7 @@ app.get("*", (req, res) => {
   res.sendFile(__dirname + "/frontend" + "/index.html");
 });
 
-const io = socketIo(server);
+const io = socketIo(app);
 
 io.on("connection", (socket: any) => {
   socket.on("userid", (userId: string) => {
