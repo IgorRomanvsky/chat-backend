@@ -1,0 +1,1 @@
+{"version":3,"file":"set-routs.js","sourceRoot":"","sources":["../../../src/utils/methods/set-routs.ts"],"names":[],"mappings":";;;AAGa,QAAA,QAAQ,GAAG,CAAC,MAAe,EAAE,MAAc,EAAE,EAAE;IAC1D,KAAK,MAAM,KAAK,IAAI,MAAM,EAAE;QAC1B,MAAM,YAAY,GAAU,KAAK,CAAC;QACjC,MAAc,CAAC,YAAY,CAAC,MAAM,CAAC,CAClC,YAAY,CAAC,IAAI,EACjB,YAAY,CAAC,OAAO,CACrB,CAAC;KACH;AACH,CAAC,CAAC"}
