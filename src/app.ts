@@ -33,7 +33,11 @@ mongoose
     console.log("Connection failed");
   });
 
-app.use(serveStatic(__dirname + "/frontend"));
+app.use("/*", (req, res) => {
+  res.sendFile(__dirname + "/dist/index.html");
+});
+
+// app.use(serveStatic(__dirname + "/frontend"));
 setRouts(routes, app);
 server.listen(PORT, () => {
   console.log("App is running on port " + PORT);
