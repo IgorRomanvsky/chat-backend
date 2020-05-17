@@ -16,8 +16,6 @@ app.get("*", (req, res) => {
   res.sendFile(__dirname + "/frontend" + "/index.html");
 });
 
-const io = socketIo(server);
-
 app.use(bodyParser.json({ limit: "500mb" }));
 mongoose
   .connect(
@@ -36,6 +34,7 @@ app.listen(PORT, () => {
   console.log("App is running on port " + PORT);
 });
 
+const io = socketIo(server);
 io.on("connection", (socket: any) => {
   socket.on("userid", (userId: string) => {
     chatService.setUserSocketById(socket, userId);
