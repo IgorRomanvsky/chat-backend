@@ -9,6 +9,7 @@ import express from "express";
 import http from "http";
 const chatService = ChatSocketService.getInstance();
 const app = express();
+app.use(serveStatic(__dirname + "/frontend"));
 const server = http.createServer(app);
 const PORT = process.env.PORT || 8000;
 
@@ -33,7 +34,6 @@ mongoose
     console.log("Connection failed");
   });
 
-app.use(serveStatic(__dirname + "/frontend"));
 setRouts(routes, app);
 server.listen(PORT, () => {
   console.log("App is running on port " + PORT);
