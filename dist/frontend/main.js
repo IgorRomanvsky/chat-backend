@@ -334,7 +334,7 @@ var ChatSocketService = /** @class */ (function () {
         this.messageService = messageService;
     }
     ChatSocketService.prototype.establishWebSocketConation = function (userId) {
-        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_3__(src_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].wsUrl);
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_3__["connect"](src_environments_environment__WEBPACK_IMPORTED_MODULE_2__["environment"].wsUrl);
         this.socket.emit("userid", userId);
         this.initSocketEvents();
     };
@@ -521,7 +521,7 @@ var environment = {
     userUrl: baseUrl + "/user",
     conversationsUrl: baseUrl + "/conversations",
     messages: baseUrl + "/messages",
-    wsUrl: "",
+    wsUrl: webSocketPrefix,
 };
 /*
  * For easier debugging in development mode, you can import the following file
