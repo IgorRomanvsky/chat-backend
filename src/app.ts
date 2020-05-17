@@ -1,7 +1,7 @@
 import { ChatSocketService } from "./modules/messages/message.socket";
 import { setRouts } from "./utils/methods/set-routs";
 import * as bodyParser from "body-parser";
-import socketIo from "socket.io";
+// import socketIo from "socket.io";
 import routes from "./modules/index";
 import mongoose from "mongoose";
 import express from "express";
@@ -32,7 +32,7 @@ app.listen(PORT, () => {
   console.log("App is running on port " + PORT);
 });
 
-const io = socketIo(server);
+const io = require("socket.io").listen(server);
 io.on("connection", (socket: any) => {
   socket.on("userid", (userId: string) => {
     chatService.setUserSocketById(socket, userId);
