@@ -18,12 +18,6 @@ app.get("*", (req, res) => {
 
 const io = socketIo(server);
 
-io.on("connection", (socket: any) => {
-  socket.on("userid", (userId: string) => {
-    chatService.setUserSocketById(socket, userId);
-  });
-});
-
 app.use(bodyParser.json({ limit: "500mb" }));
 mongoose
   .connect(
@@ -36,8 +30,14 @@ mongoose
   .catch(() => {
     console.log("Connection failed");
   });
-
 setRouts(routes, app);
+
 app.listen(PORT, () => {
   console.log("App is running on port " + PORT);
+});
+
+io.on("connection", (socket: any) => {
+  socket.on("userid", (userId: string) => {
+    chatService.setUserSocketById(socket, userId);
+  });
 });
