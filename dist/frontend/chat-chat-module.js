@@ -8902,7 +8902,7 @@ var ChatRoutes = [
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"input-wrapper\">\n  <div class=\"input\">\n    <input\n      (keyup)=\"onInputKeyPress($event.keyCode)\"\n      [(ngModel)]=\"messageText\"\n      autofocus\n      autocomplete=\"off\"\n    />\n  </div>\n\n  <div (click)=\"onSendNewMessage()\" class=\"input-btn\">\n    <i class=\"fas fa-paper-plane\"></i>\n  </div>\n</div>\n"
+module.exports = "<div class=\"input-wrapper\">\n  <div class=\"input\">\n    <input\n      #myInput\n      (keyup)=\"onInputKeyPress($event.keyCode)\"\n      [(ngModel)]=\"messageText\"\n      autofocus\n      autocomplete=\"off\"\n    />\n  </div>\n\n  <div (click)=\"onSendNewMessage()\" class=\"input-btn\">\n    <i class=\"fas fa-paper-plane\"></i>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -8947,6 +8947,9 @@ var InputComponent = /** @class */ (function () {
     InputComponent.prototype.ngOnInit = function () {
         this.currentUserId = this.accessService.loggedUser._id;
     };
+    InputComponent.prototype.ngOnChanges = function () {
+        this.inputElement.nativeElement.focus();
+    };
     InputComponent.prototype.onInputKeyPress = function (pressedKeyCode) {
         var enterKeyCode = 13;
         if (pressedKeyCode === enterKeyCode) {
@@ -8976,6 +8979,10 @@ var InputComponent = /** @class */ (function () {
             duration: 2000,
         });
     };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["ViewChild"])("myInput"),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ElementRef"])
+    ], InputComponent.prototype, "inputElement", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Object)
