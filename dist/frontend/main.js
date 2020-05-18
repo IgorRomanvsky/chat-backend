@@ -16,11 +16,13 @@ var map = {
 	"./chat/chat.module": [
 		"./src/app/chat/chat.module.ts",
 		"default~access-access-module~chat-chat-module~table-table-module",
+		"default~chat-chat-module~table-table-module",
 		"chat-chat-module"
 	],
 	"./table/table.module": [
 		"./src/app/table/table.module.ts",
 		"default~access-access-module~chat-chat-module~table-table-module",
+		"default~chat-chat-module~table-table-module",
 		"table-table-module"
 	]
 };
