@@ -8948,7 +8948,14 @@ var InputComponent = /** @class */ (function () {
         this.currentUserId = this.accessService.loggedUser._id;
     };
     InputComponent.prototype.onSendNewMessage = function () {
-        this.inputValidation();
+        if (!this.conversationPartner) {
+            this.openSnackBarNotification("Please selected a user to send him a message");
+            return;
+        }
+        if (!this.messageText.length) {
+            this.openSnackBarNotification("Message must include text");
+            return;
+        }
         var message = {
             text: this.messageText,
             sender: this.currentUserId,
@@ -8957,16 +8964,6 @@ var InputComponent = /** @class */ (function () {
         };
         this.messageText = "";
         this.messageService.onSendNewMessage(message);
-    };
-    InputComponent.prototype.inputValidation = function () {
-        if (!this.conversationPartner) {
-            this.openSnackBarNotification("No user to chat with was selected");
-            return;
-        }
-        if (!this.messageText.length) {
-            this.openSnackBarNotification("Message must include text");
-            return;
-        }
     };
     InputComponent.prototype.openSnackBarNotification = function (notificationText) {
         this._snackBar.open(notificationText, "", {
@@ -9151,7 +9148,7 @@ var MessagesLayoutComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"user-container\">\n  <div\n    *ngFor=\"let user of users\"\n    (click)=\"onUserSelect(user)\"\n    [ngClass]=\"{ activeUser: user._id === selectedUserIdToChat }\"\n    class=\"user-item\"\n  >\n    <div class=\"icon\"><i class=\"far fa-user\"></i></div>\n    <div class=\"user-name\">{{ user?.userName }}</div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"user-container\">\n  <div\n    *ngFor=\"let user of users\"\n    (click)=\"onUserSelect(user)\"\n    [ngClass]=\"{ activeUser: user._id === selectedUserIdToChat }\"\n    class=\"user-item\"\n  >\n    <div class=\"icon\"><i class=\"far fa-user\"></i></div>\n    <div class=\"user-name\">{{ user?.userName }}</div>\n    <div\n      *ngIf=\"checkHowManyNewMessagesFromUser(user?._id)\"\n      class=\"notification-icon\"\n    >\n      {{ checkHowManyNewMessagesFromUser(user?._id) }}\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -9162,7 +9159,7 @@ module.exports = "<div class=\"user-container\">\n  <div\n    *ngFor=\"let user 
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".user-container .user-item {\n  cursor: pointer;\n  padding: 10px;\n  border: 1px solid #eee;\n  display: flex;\n  align-items: center; }\n  .user-container .user-item:hover {\n    background-color: #486fe9;\n    color: #fff; }\n  .activeUser {\n  background-color: #486fe9;\n  color: #fff; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9pZ29ycm9tYW5vdnNreS9kZXZlbG9wbWVudC9jaGF0QXBwL2NoYXQtZnJvbnRlbmQvc3JjL2FwcC9jaGF0L2NvbXBvbmVudHMvdXNlcnMvdXNlcnMuY29tcG9uZW50LnNjc3MiLCIvVXNlcnMvaWdvcnJvbWFub3Zza3kvZGV2ZWxvcG1lbnQvY2hhdEFwcC9jaGF0LWZyb250ZW5kL3NyYy9zdHlsZXMvdmFycy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQU9BO0VBRUksZ0JBQWU7RUFDZixjQUFhO0VBQ2IsdUJBQXNCO0VBQ3RCLGNBQWE7RUFDYixvQkFBbUIsRUFLcEI7RUFYSDtJQUpFLDBCQ0trQjtJREpsQixZQUFXLEVBYVI7RUFJTDtFQWxCRSwwQkNLa0I7RURKbEIsWUFBVyxFQW1CWiIsImZpbGUiOiJzcmMvYXBwL2NoYXQvY29tcG9uZW50cy91c2Vycy91c2Vycy5jb21wb25lbnQuc2NzcyIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgXCIuLi8uLi8uLi8uLi9zdHlsZXMvdmFycy5zY3NzXCI7XG5cbkBtaXhpbiBhY3RpdmVVc2VyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogJGdvb2dsZUJsdWU7XG4gIGNvbG9yOiAjZmZmO1xufVxuXG4udXNlci1jb250YWluZXIge1xuICAudXNlci1pdGVtIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgcGFkZGluZzogMTBweDtcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjZWVlO1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICAgICY6aG92ZXIge1xuICAgICAgQGluY2x1ZGUgYWN0aXZlVXNlcjtcbiAgICB9XG4gIH1cbn1cblxuLmFjdGl2ZVVzZXIge1xuICBAaW5jbHVkZSBhY3RpdmVVc2VyO1xufVxuIiwiJGJsYWNrOiAjMDAwO1xuJGdyYXktZGFya2VyOiAjMzk0MjQ5O1xuJGdyYXktZGFyazogIzQzNGM1MztcbiRncmF5OiAjNmQ3NTc5O1xuJGdyYXktbGlnaHQ6ICNiMGI2Yjg7XG4kZ3JheS1saWdodGVyOiAjZDVkOWQ4O1xuJGdyYXktbW9yZS1saWdodGVyOiByZ2IoMjM5LCAyNDMsIDI0Mik7XG5cbiRnb29nbGVCbHVlOiAjNDg2ZmU5O1xuJGdvb2dsZUJsdWVMaWdodGVyOiAjNDg2ZmU5O1xuJGdvb2dsZUdyZXk6ICNmMmYzZjU7XG5cbi8vIFNpemUgaGVscGVyc1xuJG5hdmJhckhlaWdodDogNTBweDtcblxuJGJtZC1zaGFkb3ctdW1icmEtb3BhY2l0eTogMC4yICFkZWZhdWx0O1xuJGJtZC1zaGFkb3ctcGVudW1icmEtb3BhY2l0eTogMC4xNCAhZGVmYXVsdDtcbiRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eTogMC4xMiAhZGVmYXVsdDtcbiRzaGFkb3ctMmRwOiAwIDJweCAycHggMCByZ2JhKCRibGFjaywgJGJtZC1zaGFkb3ctcGVudW1icmEtb3BhY2l0eSksXG4gIDAgM3B4IDFweCAtMnB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy11bWJyYS1vcGFjaXR5KSxcbiAgMCAxcHggNXB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eSk7XG4kc2hhZG93LTRkcDogMCA0cHggNXB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LXBlbnVtYnJhLW9wYWNpdHkpLFxuICAwIDFweCAxMHB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eSksXG4gIDAgMnB4IDRweCAtMXB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy11bWJyYS1vcGFjaXR5KTtcbiRzaGFkb3ctNmRwOiAwIDZweCAxMHB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LXBlbnVtYnJhLW9wYWNpdHkpLFxuICAwIDFweCAxOHB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eSksXG4gIDAgM3B4IDVweCAtMXB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy11bWJyYS1vcGFjaXR5KTtcbiRzaGFkb3ctOGRwOiAwIDhweCAxMHB4IDFweCByZ2JhKCRibGFjaywgJGJtZC1zaGFkb3ctcGVudW1icmEtb3BhY2l0eSksXG4gIDAgM3B4IDE0cHggMnB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy1hbWJpZW50LW9wYWNpdHkpLFxuICAwIDVweCA1cHggLTNweCByZ2JhKCRibGFjaywgJGJtZC1zaGFkb3ctdW1icmEtb3BhY2l0eSk7XG4iXX0= */"
+module.exports = ".user-container .user-item {\n  cursor: pointer;\n  padding: 10px;\n  border: 1px solid #eee;\n  display: flex;\n  align-items: center; }\n  .user-container .user-item:hover {\n    background-color: #486fe9;\n    color: #fff; }\n  .notification-icon {\n  background-color: #be0808;\n  width: 17px;\n  height: 17px;\n  border-radius: 17px;\n  line-height: 17px;\n  font-size: 12px;\n  color: #fff;\n  margin-left: auto;\n  margin-right: 10px;\n  text-align: center;\n  font-weight: 700; }\n  .activeUser {\n  background-color: #486fe9;\n  color: #fff; }\n\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi9Vc2Vycy9pZ29ycm9tYW5vdnNreS9kZXZlbG9wbWVudC9jaGF0QXBwL2NoYXQtZnJvbnRlbmQvc3JjL2FwcC9jaGF0L2NvbXBvbmVudHMvdXNlcnMvdXNlcnMuY29tcG9uZW50LnNjc3MiLCIvVXNlcnMvaWdvcnJvbWFub3Zza3kvZGV2ZWxvcG1lbnQvY2hhdEFwcC9jaGF0LWZyb250ZW5kL3NyYy9zdHlsZXMvdmFycy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQVNBO0VBRUksZ0JBQWU7RUFDZixjQUFhO0VBQ2IsdUJBQXNCO0VBQ3RCLGNBQWE7RUFDYixvQkFBbUIsRUFLcEI7RUFYSDtJQUpFLDBCQ0drQjtJREZsQixZQUFXLEVBYVI7RUFJTDtFQUNFLDBCQUFnQztFQUNoQyxZQXZCNEI7RUF3QjVCLGFBeEI0QjtFQXlCNUIsb0JBekI0QjtFQTBCNUIsa0JBMUI0QjtFQTJCNUIsZ0JBQWU7RUFDZixZQUFXO0VBQ1gsa0JBQWlCO0VBQ2pCLG1CQUFrQjtFQUNsQixtQkFBa0I7RUFDbEIsaUJBQWdCLEVBQ2pCO0VBRUQ7RUFoQ0UsMEJDR2tCO0VERmxCLFlBQVcsRUFpQ1oiLCJmaWxlIjoic3JjL2FwcC9jaGF0L2NvbXBvbmVudHMvdXNlcnMvdXNlcnMuY29tcG9uZW50LnNjc3MiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0IFwiLi4vLi4vLi4vLi4vc3R5bGVzL3ZhcnMuc2Nzc1wiO1xuXG4kbm90aWZpY2F0aW9uQmFkZ2VSYWRpdXM6IDE3cHg7XG5cbkBtaXhpbiBhY3RpdmVVc2VyIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogJGdvb2dsZUJsdWU7XG4gIGNvbG9yOiAjZmZmO1xufVxuXG4udXNlci1jb250YWluZXIge1xuICAudXNlci1pdGVtIHtcbiAgICBjdXJzb3I6IHBvaW50ZXI7XG4gICAgcGFkZGluZzogMTBweDtcbiAgICBib3JkZXI6IDFweCBzb2xpZCAjZWVlO1xuICAgIGRpc3BsYXk6IGZsZXg7XG4gICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcblxuICAgICY6aG92ZXIge1xuICAgICAgQGluY2x1ZGUgYWN0aXZlVXNlcjtcbiAgICB9XG4gIH1cbn1cblxuLm5vdGlmaWNhdGlvbi1pY29uIHtcbiAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDE5MCwgOCwgOCk7XG4gIHdpZHRoOiAkbm90aWZpY2F0aW9uQmFkZ2VSYWRpdXM7XG4gIGhlaWdodDogJG5vdGlmaWNhdGlvbkJhZGdlUmFkaXVzO1xuICBib3JkZXItcmFkaXVzOiAkbm90aWZpY2F0aW9uQmFkZ2VSYWRpdXM7XG4gIGxpbmUtaGVpZ2h0OiAkbm90aWZpY2F0aW9uQmFkZ2VSYWRpdXM7XG4gIGZvbnQtc2l6ZTogMTJweDtcbiAgY29sb3I6ICNmZmY7XG4gIG1hcmdpbi1sZWZ0OiBhdXRvO1xuICBtYXJnaW4tcmlnaHQ6IDEwcHg7XG4gIHRleHQtYWxpZ246IGNlbnRlcjtcbiAgZm9udC13ZWlnaHQ6IDcwMDtcbn1cblxuLmFjdGl2ZVVzZXIge1xuICBAaW5jbHVkZSBhY3RpdmVVc2VyO1xufVxuIiwiJGJsYWNrOiAjMDAwO1xuJGdyYXktZGFya2VyOiAjMzk0MjQ5O1xuJGdyYXktZGFyazogIzQzNGM1MztcbiRncmF5OiAjNmQ3NTc5O1xuJGdyYXktbGlnaHQ6ICNiMGI2Yjg7XG4kZ3JheS1saWdodGVyOiAjZDVkOWQ4O1xuJGdyYXktbW9yZS1saWdodGVyOiByZ2IoMjM5LCAyNDMsIDI0Mik7XG5cbiRnb29nbGVCbHVlOiAjNDg2ZmU5O1xuJGdvb2dsZUJsdWVMaWdodGVyOiAjNDg2ZmU5O1xuJGdvb2dsZUdyZXk6ICNmMmYzZjU7XG5cbi8vIFNpemUgaGVscGVyc1xuJG5hdmJhckhlaWdodDogNTBweDtcblxuJGJtZC1zaGFkb3ctdW1icmEtb3BhY2l0eTogMC4yICFkZWZhdWx0O1xuJGJtZC1zaGFkb3ctcGVudW1icmEtb3BhY2l0eTogMC4xNCAhZGVmYXVsdDtcbiRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eTogMC4xMiAhZGVmYXVsdDtcbiRzaGFkb3ctMmRwOiAwIDJweCAycHggMCByZ2JhKCRibGFjaywgJGJtZC1zaGFkb3ctcGVudW1icmEtb3BhY2l0eSksXG4gIDAgM3B4IDFweCAtMnB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy11bWJyYS1vcGFjaXR5KSxcbiAgMCAxcHggNXB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eSk7XG4kc2hhZG93LTRkcDogMCA0cHggNXB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LXBlbnVtYnJhLW9wYWNpdHkpLFxuICAwIDFweCAxMHB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eSksXG4gIDAgMnB4IDRweCAtMXB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy11bWJyYS1vcGFjaXR5KTtcbiRzaGFkb3ctNmRwOiAwIDZweCAxMHB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LXBlbnVtYnJhLW9wYWNpdHkpLFxuICAwIDFweCAxOHB4IDAgcmdiYSgkYmxhY2ssICRibWQtc2hhZG93LWFtYmllbnQtb3BhY2l0eSksXG4gIDAgM3B4IDVweCAtMXB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy11bWJyYS1vcGFjaXR5KTtcbiRzaGFkb3ctOGRwOiAwIDhweCAxMHB4IDFweCByZ2JhKCRibGFjaywgJGJtZC1zaGFkb3ctcGVudW1icmEtb3BhY2l0eSksXG4gIDAgM3B4IDE0cHggMnB4IHJnYmEoJGJsYWNrLCAkYm1kLXNoYWRvdy1hbWJpZW50LW9wYWNpdHkpLFxuICAwIDVweCA1cHggLTNweCByZ2JhKCRibGFjaywgJGJtZC1zaGFkb3ctdW1icmEtb3BhY2l0eSk7XG4iXX0= */"
 
 /***/ }),
 
@@ -9201,6 +9198,10 @@ var UsersComponent = /** @class */ (function () {
     UsersComponent.prototype.ngOnDestroy = function () {
         this.userSub.unsubscribe();
     };
+    UsersComponent.prototype.checkHowManyNewMessagesFromUser = function (userId) {
+        return this.newMessages.filter(function (msg) { return msg.sender === userId; })
+            .length;
+    };
     UsersComponent.prototype.onUserSelect = function (selectedUser) {
         if (this.selectedUserIdToChat === selectedUser._id) {
             return;
@@ -9209,6 +9210,10 @@ var UsersComponent = /** @class */ (function () {
         this.selectedUserIdToChat = selectedUser._id;
         this.conversationService.getConversationBetweenTwoUsers(selectedUser._id);
     };
+    tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Input"])(),
+        tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", Array)
+    ], UsersComponent.prototype, "newMessages", void 0);
     tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Output"])(),
         tslib__WEBPACK_IMPORTED_MODULE_0__["__metadata"]("design:type", _angular_core__WEBPACK_IMPORTED_MODULE_1__["EventEmitter"])
@@ -9236,7 +9241,7 @@ var UsersComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"chat-page-container\">\n  <div class=\"user-container\">\n    <app-users\n      (setCurrentConversationPartner)=\"updateConversationPartner($event)\"\n    ></app-users>\n  </div>\n  <div class=\"message-container\">\n    <app-messages-layout\n      [conversationPartner]=\"conversationPartner\"\n      [conversation]=\"conversation\"\n    ></app-messages-layout>\n  </div>\n</div>\n"
+module.exports = "<div class=\"chat-page-container\">\n  <div class=\"user-container\">\n    <app-users\n      [newMessages]=\"newMessages\"\n      (setCurrentConversationPartner)=\"updateConversationPartner($event)\"\n    ></app-users>\n  </div>\n  <div class=\"message-container\">\n    <app-messages-layout\n      [conversationPartner]=\"conversationPartner\"\n      [conversation]=\"conversation\"\n    ></app-messages-layout>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -9273,6 +9278,7 @@ var ChatPageComponent = /** @class */ (function () {
     function ChatPageComponent(conversationService, messageService) {
         this.conversationService = conversationService;
         this.messageService = messageService;
+        this.newMessages = [];
     }
     ChatPageComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -9280,8 +9286,12 @@ var ChatPageComponent = /** @class */ (function () {
             _this.conversation = conversation;
         });
         this.newMsgSub = this.messageService.chatMessageUpdateSub.subscribe(function (newmsg) {
-            if (newmsg.conversationId === _this.conversation._id) {
+            if (_this.conversation &&
+                newmsg.conversationId === _this.conversation._id) {
                 _this.checkIfUpdateNewMessage(newmsg);
+            }
+            else {
+                _this.newMessages.push(newmsg);
             }
         });
     };
@@ -9296,7 +9306,11 @@ var ChatPageComponent = /** @class */ (function () {
         this.conversation = copyOfConversation;
     };
     ChatPageComponent.prototype.updateConversationPartner = function (user) {
+        this.clearNewMessagesBySelectedUserToChat(user._id);
         this.conversationPartner = user;
+    };
+    ChatPageComponent.prototype.clearNewMessagesBySelectedUserToChat = function (userId) {
+        this.newMessages = this.newMessages.filter(function (msg) { return msg.sender !== userId; }).slice();
     };
     ChatPageComponent = tslib__WEBPACK_IMPORTED_MODULE_0__["__decorate"]([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_1__["Component"])({
